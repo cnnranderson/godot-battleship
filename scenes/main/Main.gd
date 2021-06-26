@@ -7,7 +7,7 @@ var skip_transition = [false, false]
 
 func _ready():
 	Global.main = self
-	load_scene(Global.Scenes.START_MENU, true, true)
+	load_scene(Global.Scenes.GAME, true, true)
 
 func load_scene(scene = -1, skip_intro = false, skip_outro = false):
 	# Validate scene
@@ -23,6 +23,7 @@ func load_scene(scene = -1, skip_intro = false, skip_outro = false):
 			get_tree().paused = true
 			$Timers/LoadTimer.set_wait_time(0.05)
 			$Timers/LoadTimer.start()
+			
 			scene_state = 1 if not skip_transition[0] else 2
 		1:
 			# Enter transition

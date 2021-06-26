@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://entities/grid/Grid.gd" type="Script" id=1]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 128, 128 )
+
+[node name="Grid" type="Area2D"]
+script = ExtResource( 1 )
+tile_size = 16
+
+[node name="Shape" type="CollisionShape2D" parent="."]
+shape = SubResource( 1 )
+
+[connection signal="input_event" from="." to="." method="_on_Grid_input_event"]

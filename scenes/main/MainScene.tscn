@@ -10,6 +10,7 @@ script = ExtResource( 1 )
 margin_right = 40.0
 margin_bottom = 40.0
 rect_min_size = Vector2( 640, 480 )
+mouse_filter = 2
 color = Color( 0.937255, 0.937255, 0.913725, 1 )
 __meta__ = {
 "_edit_use_anchors_": false

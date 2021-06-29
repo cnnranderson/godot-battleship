@@ -17,7 +17,7 @@ extents = Vector2( 24, 8 )
 material = SubResource( 1 )
 texture = ExtResource( 2 )
 script = ExtResource( 1 )
-hp = 4
+hp = 3
 
 [node name="Area2D" type="Area2D" parent="."]
 

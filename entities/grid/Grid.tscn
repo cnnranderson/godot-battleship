@@ -7,7 +7,6 @@ extents = Vector2( 128, 128 )
 
 [node name="Grid" type="Area2D"]
 script = ExtResource( 1 )
-tile_size = 16
 
 [node name="Shape" type="CollisionShape2D" parent="."]
 shape = SubResource( 1 )

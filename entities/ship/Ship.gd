@@ -32,13 +32,13 @@ func place(grid: ShipGrid, location: Vector2, grid_pos: Vector2):
 	match orientation:
 		Orientation.HORIZONTAL:
 			if grid_pos.x < 2:
-				diff.x = -(int(grid_pos.x) % 2 - int(hp / 2.0)) * 16
-			elif grid_pos.x > grid.grid_size.x - 2:
+				diff.x = -(grid_pos.x - int(hp / 2.0)) * 16
+			elif grid_pos.x > grid.grid_size.x - 3:
 				diff.x = (grid.grid_size.x - grid_pos.x - int((hp + 1) / 2.0)) * 16
 		Orientation.VERTICAL:
 			if grid_pos.y < 2:
-				diff.y = -(int(grid_pos.y) % 2 - int(hp / 2.0)) * 16
-			elif grid_pos.y > grid.grid_size.y - 2:
+				diff.y = -(grid_pos.y - int(hp / 2.0)) * 16
+			elif grid_pos.y > grid.grid_size.y - 3:
 				diff.y = (grid.grid_size.y - grid_pos.y - int((hp + 1) / 2.0)) * 16
 				
 	diff = _adjust_position(diff)

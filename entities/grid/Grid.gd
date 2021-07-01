@@ -9,6 +9,7 @@ export var tile_size : Vector2 = Vector2(16, 16) setget set_tile_size
 
 var pos = Vector2(0, 0)
 var grid = []
+var mouse_inside = false
 
 func _ready():
 	$Shape.shape.extents = grid_size / 2 * tile_size
@@ -36,10 +37,8 @@ func set_tile_size(value):
 	update()
 
 func _draw():
-	var grid_width = grid_size.x * tile_size.x
-	var grid_height = grid_size.y * tile_size.y
-	draw_rect(Rect2(-grid_width / 2, -grid_height / 2, grid_width, grid_height), Color.gray)
-	draw_rect(Rect2(pos.x * tile_size.x, pos.y * tile_size.y, tile_size.x, tile_size.y), Color.white)
+	if mouse_inside:
+		draw_rect(Rect2(pos.x * tile_size.x, pos.y * tile_size.y, tile_size.x, tile_size.y), Color.black)
 
 func _on_Grid_input_event(viewport, event, shape_idx):
 	if event is InputEventMouse:
@@ -57,3 +56,11 @@ func _grid_to_world(coord: Vector2):
 
 func _grid_normalize(coord: Vector2):
 	return coord + (grid_size / 2)
+
+
+func _on_Grid_mouse_entered():
+	mouse_inside = true
+
+func _on_Grid_mouse_exited():
+	mouse_inside = false
+	update()

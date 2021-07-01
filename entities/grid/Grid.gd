@@ -11,11 +11,14 @@ var pos = Vector2(0, 0)
 var grid = []
 
 func _ready():
-	var shape = $Shape.shape as Shape2D
-	shape.extents = grid_size / 2 * tile_size
+	$Shape.shape.extents = grid_size / 2 * tile_size
 
 func _update_grid():
 	$Shape.shape.extents = grid_size / 2 * tile_size
+	$Border.rect_position.x = -(grid_size.x / 2 * tile_size.x + 3)
+	$Border.rect_position.y = -(grid_size.y / 2 * tile_size.y + 3)
+	$Border.rect_size.x = grid_size.x * tile_size.x + 6
+	$Border.rect_size.y = grid_size.y * tile_size.y + 6
 	grid = []
 	for i in range(grid_size.x):
 		grid.append([])

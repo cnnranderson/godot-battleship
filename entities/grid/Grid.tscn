@@ -11,7 +11,7 @@ extents = Vector2( 128, 128 )
 [sub_resource type="ShaderMaterial" id=2]
 shader = ExtResource( 4 )
 shader_param/WATER_COL = Color( 0.0784314, 0.466667, 0.447059, 1 )
-shader_param/WATER2_COL = Color( 0, 0.305882, 0.290196, 1 )
+shader_param/WATER2_COL = Color( 0.0784314, 0.466667, 0.447059, 1 )
 shader_param/FOAM_COL = Color( 0.937255, 0.937255, 0.913725, 1 )
 shader_param/distortion_speed = 5.0
 shader_param/tile = Vector2( 64, 64 )

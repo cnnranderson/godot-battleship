@@ -2,13 +2,12 @@ tool
 extends Area2D
 class_name ShipGrid
 
-enum GridItem {NONE, SHIP}
+enum GridItem {NONE, SHIP, MISS}
 
 export var grid_size : Vector2 = Vector2(16, 16) setget set_grid_size
 export var tile_size : Vector2 = Vector2(16, 16) setget set_tile_size
 
 var pos = Vector2(0, 0)
-var grid = []
 var mouse_inside = false
 
 func _ready():
@@ -20,20 +19,32 @@ func _update_grid():
 	$Border.rect_position.y = -(grid_size.y / 2 * tile_size.y + 3)
 	$Border.rect_size.x = grid_size.x * tile_size.x + 6
 	$Border.rect_size.y = grid_size.y * tile_size.y + 6
-	grid = []
-	for i in range(grid_size.x):
-		grid.append([])
-		for j in range(grid_size.y):
-			grid[i].append(GridItem.NONE)
+	$Water.material.set_shader_param("tile", Vector2(grid_size.x * 4, grid_size.y * 4))
+	$Water.rect_position = -grid_size / 2 * tile_size
+	$Water.rect_size = grid_size * tile_size
+	
+	if not Engine.editor_hint:
+		GameState.grid = []
+		for i in range(grid_size.x):
+			GameState.grid.append([])
+			for j in range(grid_size.y):
+				GameState.grid[i].append(GridItem.NONE)
 
 func set_grid_size(value):
 	grid_size = value
 	_update_grid()
-	update()
 
 func set_tile_size(value):
 	tile_size = value
 	_update_grid()
+
+func _grid_to_world(coord: Vector2):
+	return position + (pos * tile_size) + (tile_size / 2)
+
+func _grid_normalize(coord: Vector2):
+	return coord + (grid_size / 2)
+
+func _process(delta):
 	update()
 
 func _draw():
@@ -43,7 +54,6 @@ func _draw():
 func _on_Grid_input_event(viewport, event, shape_idx):
 	if event is InputEventMouse:
 		pos = ((event.position - position) / tile_size).floor()
-		update()
 	if event is InputEventMouseButton:
 		if event.button_index == BUTTON_LEFT and event.pressed:
 			if GameState.selected_ship:
@@ -51,16 +61,8 @@ func _on_Grid_input_event(viewport, event, shape_idx):
 				var normal = _grid_normalize(pos)
 				GameState.selected_ship.place(self, loc, normal)
 
-func _grid_to_world(coord: Vector2):
-	return position + (pos * tile_size) + (tile_size / 2)
-
-func _grid_normalize(coord: Vector2):
-	return coord + (grid_size / 2)
-
-
 func _on_Grid_mouse_entered():
 	mouse_inside = true
 
 func _on_Grid_mouse_exited():
 	mouse_inside = false
-	update()

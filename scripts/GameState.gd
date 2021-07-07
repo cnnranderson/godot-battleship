@@ -2,5 +2,6 @@ extends Node
 
 var selected_ship : Ship
 
-var grid = []
-var enemy_grid = []
+var grid : Array = []
+var hit_markers = []
+var enemy_hit_markers = []

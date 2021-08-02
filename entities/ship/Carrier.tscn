@@ -17,6 +17,7 @@ extents = Vector2( 40, 8 )
 material = SubResource( 1 )
 texture = ExtResource( 2 )
 script = ExtResource( 1 )
+ship_name = "Carrier"
 
 [node name="Area2D" type="Area2D" parent="."]
 

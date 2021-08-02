@@ -3,7 +3,10 @@ class_name Ship
 
 enum Orientation {VERTICAL, HORIZONTAL}
 
+signal ship_picked_up(ship_name, ship_hp)
+
 export(int, 0, 5) var hp = 5
+export var ship_name = "Unknown"
 
 onready var start_pos = position
 onready var target_pos = position
@@ -15,11 +18,13 @@ var rot = rotation
 
 func _ready():
 	set_meta("entity_type", "ship")
+	set_meta("entity_name", ship_name)
 
-func _process(delta):
+func _process(_delta):
 	if dragging:
 		target_pos = _adjust_position(get_viewport().get_mouse_position())
 	
+	_adjust_orientation()
 	position = lerp(position, target_pos, 0.4)
 	rotation = lerp(rotation, rot, 0.5)
 
@@ -54,6 +59,9 @@ func _adjust_position(target: Vector2):
 				target.y -= 8
 	return target
 
+func _adjust_orientation():
+	rot = deg2rad(0) if orientation == Orientation.HORIZONTAL else deg2rad(90)
+
 func _on_Area2D_mouse_entered():
 	if GameState.selected_ship == null or GameState.selected_ship == self:
 		material.set_shader_param("intensity", 400)
@@ -62,7 +70,7 @@ func _on_Area2D_mouse_exited():
 	if dragging: return
 	material.set_shader_param("intensity", 0)
 
-func _on_Area2D_input_event(viewport, event, shape_idx):
+func _on_Area2D_input_event(_viewport, event, _shape_idx):
 	if event is InputEventMouseButton:
 		if event.button_index == BUTTON_LEFT and event.pressed:
 			# Ignore input if a different ship is already being dragged around
@@ -76,6 +84,7 @@ func _on_Area2D_input_event(viewport, event, shape_idx):
 				modulate.a = 0.9
 				z_index = 1
 				placed = false
+				Events.emit_signal("ship_picked_up", self)
 				GameState.selected_ship = self
 			else:
 				var grid_overlap = null
@@ -83,22 +92,24 @@ func _on_Area2D_input_event(viewport, event, shape_idx):
 				for area in $Area2D.get_overlapping_areas():
 					match area.get_parent().get_meta("entity_type"):
 						"ship":
-							print("Found ship")
 							ship_overlap = area.get_parent() as Ship
 						"grid":
-							print("Found grid")
 							grid_overlap = area.get_parent() as ShipGrid
 				
-				if ship_overlap:
-					dragging = true
-				elif grid_overlap:
-					grid_overlap.place_ship(self)
+				if grid_overlap:
+					# Attempt grid placement
+					var attempt = grid_overlap.place_ship(self)
+					if not attempt:
+						dragging = true
 				else:
+					# Reset position
 					z_index = 0
+					modulate.a = 1.0
+					orientation = Orientation.HORIZONTAL
+					
 					target_pos = start_pos
 					GameState.selected_ship = null
 		
 		if event.button_index == BUTTON_RIGHT and event.pressed:
 			if dragging:
 				orientation = Orientation.HORIZONTAL if orientation == Orientation.VERTICAL else Orientation.VERTICAL
-				rot = 0 if orientation == Orientation.HORIZONTAL else (PI / 2)

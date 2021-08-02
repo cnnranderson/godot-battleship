@@ -18,6 +18,7 @@ material = SubResource( 1 )
 texture = ExtResource( 2 )
 script = ExtResource( 1 )
 hp = 2
+ship_name = "Boat"
 
 [node name="Area2D" type="Area2D" parent="."]
 

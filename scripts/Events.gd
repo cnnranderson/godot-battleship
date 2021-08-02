@@ -9,3 +9,6 @@ connecting signal subscribers.
 """
 
 signal game_won
+
+# Ship Operations
+signal ship_picked_up(ship)

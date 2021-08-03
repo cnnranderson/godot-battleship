@@ -52,9 +52,6 @@ __meta__ = {
 [node name="Shape" type="CollisionShape2D" parent="Area2D"]
 shape = SubResource( 2 )
 
-[node name="grid" type="Sprite" parent="."]
-texture = ExtResource( 5 )
-
 [node name="Rows" type="Label" parent="."]
 margin_left = -93.8753
 margin_top = -80.005
@@ -99,6 +96,18 @@ patch_margin_left = 5
 patch_margin_top = 5
 patch_margin_right = 5
 patch_margin_bottom = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="GridDots" type="TextureRect" parent="."]
+margin_left = -80.0
+margin_top = -80.0
+margin_right = 80.0
+margin_bottom = 80.0
+mouse_filter = 2
+texture = ExtResource( 5 )
+stretch_mode = 2
 __meta__ = {
 "_edit_use_anchors_": false
 }

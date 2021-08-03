@@ -46,9 +46,9 @@ Helpers="*res://scripts/Helpers.gd"
 
 [display]
 
-window/size/width=640
+window/size/width=360
 window/size/height=360
-window/size/test_width=1280
+window/size/test_width=720
 window/size/test_height=720
 window/stretch/mode="viewport"
 window/stretch/aspect="keep"

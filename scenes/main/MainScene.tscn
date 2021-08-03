@@ -7,9 +7,9 @@ pause_mode = 2
 script = ExtResource( 1 )
 
 [node name="ColorRect" type="ColorRect" parent="."]
-margin_right = 640.0
+margin_right = 360.0
 margin_bottom = 360.0
-rect_min_size = Vector2( 640, 360 )
+rect_min_size = Vector2( 360, 360 )
 mouse_filter = 2
 color = Color( 0.937255, 0.937255, 0.913725, 1 )
 __meta__ = {

@@ -15,16 +15,16 @@ anchor_mode = 0
 current = true
 
 [node name="Grid" parent="." instance=ExtResource( 3 )]
-position = Vector2( 320, 180 )
+position = Vector2( 140, 180 )
 
 [node name="Submarine" parent="." instance=ExtResource( 4 )]
-position = Vector2( 508, 160 )
+position = Vector2( 271.15, 176.746 )
 
 [node name="Boat" parent="." instance=ExtResource( 6 )]
-position = Vector2( 500, 140 )
+position = Vector2( 263.15, 156.746 )
 
 [node name="Battleship" parent="." instance=ExtResource( 5 )]
-position = Vector2( 516, 180 )
+position = Vector2( 279.15, 196.746 )
 
 [node name="Carrier" parent="." instance=ExtResource( 2 )]
-position = Vector2( 524, 200 )
+position = Vector2( 287.15, 216.746 )

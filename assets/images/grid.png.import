@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/carrier_simple.png-983f34abce82e498ad851d6cb5a62747.stex"
+path="res://.import/grid.png-fe2d9a86230ab18f4d493531507a1cff.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/images/carrier_simple.png"
-dest_files=[ "res://.import/carrier_simple.png-983f34abce82e498ad851d6cb5a62747.stex" ]
+source_file="res://assets/images/grid.png"
+dest_files=[ "res://.import/grid.png-fe2d9a86230ab18f4d493531507a1cff.stex" ]
 
 [params]
 

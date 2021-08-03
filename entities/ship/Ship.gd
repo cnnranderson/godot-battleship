@@ -30,7 +30,6 @@ func _process(_delta):
 
 func place(grid: ShipGrid, location: Vector2, grid_pos: Vector2):
 	z_index = 0
-	modulate.a = 1.0
 	placed = true
 	target_pos = location
 	var diff = Vector2(0, 0)
@@ -38,13 +37,13 @@ func place(grid: ShipGrid, location: Vector2, grid_pos: Vector2):
 		Orientation.HORIZONTAL:
 			if grid_pos.x < 2:
 				diff.x = -(grid_pos.x - int(hp / 2.0)) * 16
-			elif grid_pos.x > grid.grid_size.x - 3:
-				diff.x = min((grid.grid_size.x - grid_pos.x - int((hp + 1) / 2.0)) * 16, 0)
+			elif grid_pos.x > grid.grid_size - 3:
+				diff.x = min((grid.grid_size - grid_pos.x - int((hp + 1) / 2.0)) * 16, 0)
 		Orientation.VERTICAL:
 			if grid_pos.y < 2:
 				diff.y = -(grid_pos.y - int(hp / 2.0)) * 16
-			elif grid_pos.y > grid.grid_size.y - 3:
-				diff.y = min((grid.grid_size.y - grid_pos.y - int((hp + 1) / 2.0)) * 16, 0)
+			elif grid_pos.y > grid.grid_size - 3:
+				diff.y = min((grid.grid_size - grid_pos.y - int((hp + 1) / 2.0)) * 16, 0)
 				
 	diff = _adjust_position(diff)
 	target_pos += diff
@@ -62,14 +61,6 @@ func _adjust_position(target: Vector2):
 func _adjust_orientation():
 	rot = deg2rad(0) if orientation == Orientation.HORIZONTAL else deg2rad(90)
 
-func _on_Area2D_mouse_entered():
-	if GameState.selected_ship == null or GameState.selected_ship == self:
-		material.set_shader_param("intensity", 400)
-
-func _on_Area2D_mouse_exited():
-	if dragging: return
-	material.set_shader_param("intensity", 0)
-
 func _on_Area2D_input_event(_viewport, event, _shape_idx):
 	if event is InputEventMouseButton:
 		if event.button_index == BUTTON_LEFT and event.pressed:
@@ -81,12 +72,13 @@ func _on_Area2D_input_event(_viewport, event, _shape_idx):
 			dragging = !dragging
 			
 			if dragging:
-				modulate.a = 0.9
+				$Sprite.set_animation("selected")
 				z_index = 1
 				placed = false
 				Events.emit_signal("ship_picked_up", self)
 				GameState.selected_ship = self
 			else:
+				$Sprite.set_animation("unselected")
 				var grid_overlap = null
 				var ship_overlap = null
 				for area in $Area2D.get_overlapping_areas():
@@ -101,10 +93,10 @@ func _on_Area2D_input_event(_viewport, event, _shape_idx):
 					var attempt = grid_overlap.place_ship(self)
 					if not attempt:
 						dragging = true
+						$Sprite.set_animation("selected")
 				else:
 					# Reset position
 					z_index = 0
-					modulate.a = 1.0
 					orientation = Orientation.HORIZONTAL
 					
 					target_pos = start_pos

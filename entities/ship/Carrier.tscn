@@ -1,7 +1,7 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://entities/ship/Ship.gd" type="Script" id=1]
-[ext_resource path="res://assets/images/carrier_simple.png" type="Texture" id=2]
+[ext_resource path="res://assets/images/carrier.png" type="Texture" id=2]
 [ext_resource path="res://shaders/outline.shader" type="Shader" id=3]
 
 [sub_resource type="ShaderMaterial" id=1]
@@ -13,9 +13,49 @@ shader_param/outline_color = Color( 0.0705882, 0.0705882, 0.0705882, 1 )
 [sub_resource type="RectangleShape2D" id=2]
 extents = Vector2( 40, 8 )
 
-[node name="Carrier" type="Sprite"]
+[sub_resource type="AtlasTexture" id=4]
+atlas = ExtResource( 2 )
+region = Rect2( 0, 0, 95, 24 )
+
+[sub_resource type="AtlasTexture" id=5]
+atlas = ExtResource( 2 )
+region = Rect2( 95, 0, 95, 24 )
+
+[sub_resource type="AtlasTexture" id=6]
+atlas = ExtResource( 2 )
+region = Rect2( 190, 0, 95, 24 )
+
+[sub_resource type="AtlasTexture" id=7]
+atlas = ExtResource( 2 )
+region = Rect2( 285, 0, 95, 24 )
+
+[sub_resource type="AtlasTexture" id=8]
+atlas = ExtResource( 2 )
+region = Rect2( 380, 0, 95, 24 )
+
+[sub_resource type="AtlasTexture" id=9]
+atlas = ExtResource( 2 )
+region = Rect2( 475, 0, 95, 24 )
+
+[sub_resource type="AtlasTexture" id=10]
+atlas = ExtResource( 2 )
+region = Rect2( 570, 0, 95, 24 )
+
+[sub_resource type="SpriteFrames" id=3]
+animations = [ {
+"frames": [ SubResource( 4 ) ],
+"loop": true,
+"name": "unselected",
+"speed": 1.0
+}, {
+"frames": [ SubResource( 5 ), SubResource( 6 ), SubResource( 7 ), SubResource( 8 ), SubResource( 9 ), SubResource( 10 ) ],
+"loop": true,
+"name": "selected",
+"speed": 10.0
+} ]
+
+[node name="Carrier" type="Node2D"]
 material = SubResource( 1 )
-texture = ExtResource( 2 )
 script = ExtResource( 1 )
 ship_name = "Carrier"
 
@@ -24,6 +64,9 @@ ship_name = "Carrier"
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 shape = SubResource( 2 )
 
+[node name="Sprite" type="AnimatedSprite" parent="."]
+frames = SubResource( 3 )
+animation = "unselected"
+playing = true
+
 [connection signal="input_event" from="Area2D" to="." method="_on_Area2D_input_event"]
-[connection signal="mouse_entered" from="Area2D" to="." method="_on_Area2D_mouse_entered"]
-[connection signal="mouse_exited" from="Area2D" to="." method="_on_Area2D_mouse_exited"]

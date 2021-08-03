@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/battleship_simple.png-8c4818923c33f284f4338d8e7cf36dfd.stex"
+path="res://.import/submarine.png-3b3570626d639a34f2696c9b8184f548.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/images/battleship_simple.png"
-dest_files=[ "res://.import/battleship_simple.png-8c4818923c33f284f4338d8e7cf36dfd.stex" ]
+source_file="res://assets/images/submarine.png"
+dest_files=[ "res://.import/submarine.png-3b3570626d639a34f2696c9b8184f548.stex" ]
 
 [params]
 

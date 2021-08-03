@@ -54,17 +54,18 @@ func _process(_delta):
 	update()
 
 func _draw():
-	if hovering and GameState.selected_ship:
-		var ship_hp = GameState.selected_ship.hp
-		if GameState.selected_ship.orientation == 1:
-			draw_rect(Rect2(_scale(max(-8, min(pos.x - ship_hp / 2, 8 - ship_hp))), _scale(pos.y), _scale(ship_hp), tile_size.y), Color.black)
-		else:
-			draw_rect(Rect2(_scale(pos.x), _scale(max(-8, min(pos.y - ship_hp / 2, 8 - ship_hp))), tile_size.x, _scale(ship_hp)), Color.black)
-	
 	for i in range(0, 16):
 		for j in range(0, 16):
 			if GameState.grid[i][j] != 0:
 				draw_rect(Rect2(_scale(i - 8), _scale(j - 8), tile_size.x, tile_size.y), Color(20 * GameState.grid[i][j]))
+				
+	if hovering and GameState.selected_ship:
+		var co = Color.black if GameState.grid[pos.x - 8][pos.y - 8] == 0 else Color.red
+		var ship_hp = GameState.selected_ship.hp
+		if GameState.selected_ship.orientation == 1:
+			draw_rect(Rect2(_scale(max(-8, min(pos.x - ship_hp / 2, 8 - ship_hp))), _scale(pos.y), _scale(ship_hp), tile_size.y), co)
+		else:
+			draw_rect(Rect2(_scale(pos.x), _scale(max(-8, min(pos.y - ship_hp / 2, 8 - ship_hp))), tile_size.x, _scale(ship_hp)), co)
 
 func place_ship(ship):
 	var min_x = pos.x

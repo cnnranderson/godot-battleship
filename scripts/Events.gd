@@ -12,3 +12,4 @@ signal game_won
 
 # Ship Operations
 signal ship_picked_up(ship)
+signal ship_placed

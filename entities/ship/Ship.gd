@@ -47,6 +47,7 @@ func place(grid: ShipGrid, location: Vector2, grid_pos: Vector2):
 				
 	diff = _adjust_position(diff)
 	target_pos += diff
+	Events.emit_signal("ship_placed")
 	GameState.selected_ship = null
 
 func _adjust_position(target: Vector2):

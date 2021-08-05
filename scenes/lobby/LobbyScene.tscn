@@ -1,53 +1,154 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://scenes/lobby/LobbyScene.gd" type="Script" id=1]
+[ext_resource path="res://base_theme.tres" type="Theme" id=2]
+[ext_resource path="res://assets/images/refresh.png" type="Texture" id=3]
+
+[sub_resource type="StyleBoxFlat" id=6]
+bg_color = Color( 0.34902, 0.247059, 0.188235, 1 )
+anti_aliasing = false
+
+[sub_resource type="StyleBoxEmpty" id=8]
+
+[sub_resource type="StyleBoxFlat" id=9]
+bg_color = Color( 0.34902, 0.247059, 0.188235, 1 )
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0.937255, 0.937255, 0.913725, 1 )
 
 [node name="Lobby" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+theme = ExtResource( 2 )
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="LobbyDialog" type="PopupDialog" parent="."]
+[node name="Tween" type="Tween" parent="."]
+
+[node name="NewGamePanel" type="PanelContainer" parent="."]
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -90.0
-margin_top = -70.0
-margin_right = 90.0
-margin_bottom = 70.0
-rect_min_size = Vector2( 180, 140 )
+margin_left = -80.0
+margin_top = -60.0
+margin_right = 80.0
+margin_bottom = 60.0
+rect_min_size = Vector2( 160, 120 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="VBox" type="VBoxContainer" parent="LobbyDialog"]
-anchor_right = 1.0
-anchor_bottom = 1.0
+[node name="VBox" type="VBoxContainer" parent="NewGamePanel"]
+margin_left = 4.0
+margin_top = 4.0
+margin_right = 156.0
+margin_bottom = 116.0
 custom_constants/separation = 12
 alignment = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Create" type="Button" parent="LobbyDialog/VBox"]
-margin_left = 30.0
-margin_top = 44.0
-margin_right = 150.0
-margin_bottom = 64.0
+[node name="GameName" type="LineEdit" parent="NewGamePanel/VBox"]
+margin_left = 16.0
+margin_top = 11.0
+margin_right = 136.0
+margin_bottom = 34.0
+rect_min_size = Vector2( 120, 0 )
+size_flags_horizontal = 4
+align = 1
+max_length = 12
+
+[node name="Create" type="Button" parent="NewGamePanel/VBox"]
+margin_left = 16.0
+margin_top = 46.0
+margin_right = 136.0
+margin_bottom = 67.0
 rect_min_size = Vector2( 120, 0 )
 size_flags_horizontal = 4
 text = "Create Match"
 
-[node name="Join" type="Button" parent="LobbyDialog/VBox"]
-margin_left = 30.0
-margin_top = 76.0
-margin_right = 150.0
-margin_bottom = 96.0
+[node name="Join" type="Button" parent="NewGamePanel/VBox"]
+margin_left = 16.0
+margin_top = 79.0
+margin_right = 136.0
+margin_bottom = 100.0
 rect_min_size = Vector2( 120, 0 )
 size_flags_horizontal = 4
 size_flags_vertical = 4
 text = "Join Match"
+
+[node name="MatchList" type="PanelContainer" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -90.0
+margin_top = -110.0
+margin_right = 90.0
+margin_bottom = 110.0
+rect_min_size = Vector2( 180, 220 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBox" type="VBoxContainer" parent="MatchList"]
+margin_left = 4.0
+margin_top = 4.0
+margin_right = 176.0
+margin_bottom = 216.0
+
+[node name="MBox" type="MarginContainer" parent="MatchList/VBox"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 160.0
+margin_bottom = 180.0
+size_flags_vertical = 3
+
+[node name="List" type="ItemList" parent="MatchList/VBox/MBox"]
+margin_right = 150.0
+margin_bottom = 170.0
+custom_styles/selected_focus = SubResource( 6 )
+custom_styles/bg_focus = SubResource( 8 )
+custom_styles/selected = SubResource( 9 )
+custom_styles/bg = SubResource( 1 )
+custom_colors/guide_color = Color( 0.937255, 0.937255, 0.913725, 1 )
+custom_colors/font_color_selected = Color( 0.937255, 0.937255, 0.913725, 1 )
+custom_colors/font_color = Color( 0.34902, 0.247059, 0.188235, 1 )
+
+[node name="HBox" type="HBoxContainer" parent="MatchList/VBox"]
+margin_left = 11.0
+margin_top = 191.0
+margin_right = 161.0
+margin_bottom = 212.0
+size_flags_horizontal = 4
+
+[node name="Back" type="Button" parent="MatchList/VBox/HBox"]
+margin_right = 60.0
+margin_bottom = 21.0
+rect_min_size = Vector2( 60, 0 )
+text = "Back"
+
+[node name="Refresh" type="Button" parent="MatchList/VBox/HBox"]
+margin_left = 64.0
+margin_right = 86.0
+margin_bottom = 21.0
+rect_min_size = Vector2( 22, 0 )
+icon = ExtResource( 3 )
+expand_icon = true
+
+[node name="JoinMatch" type="Button" parent="MatchList/VBox/HBox"]
+margin_left = 90.0
+margin_right = 150.0
+margin_bottom = 21.0
+rect_min_size = Vector2( 60, 0 )
+text = "Join"
+
+[connection signal="pressed" from="NewGamePanel/VBox/Create" to="." method="_on_Create_pressed"]
+[connection signal="pressed" from="NewGamePanel/VBox/Join" to="." method="_on_Join_pressed"]
+[connection signal="pressed" from="MatchList/VBox/HBox/Back" to="." method="_on_Back_pressed"]
+[connection signal="pressed" from="MatchList/VBox/HBox/Refresh" to="." method="_on_Refresh_pressed"]
+[connection signal="pressed" from="MatchList/VBox/HBox/JoinMatch" to="." method="_on_JoinMatch_pressed"]

@@ -1,7 +1,6 @@
 extends Node
 
 var games_ref
-var game_ref
 var game_name = "test"
 var player_id = 1
 var in_game = true
@@ -13,9 +12,20 @@ func _ready():
 	Firebase.Auth.connect("login_succeeded", self, "_on_login_succeeded")
 	Firebase.Auth.login_with_email_and_password(email, password)
 
-func create_match(name: String):
-	game_name = name
+func create_match(new_game: String):
+	# Make sure a game doesn't exist
+	for game in games_ref.get_data():
+		if new_game == game:
+			return false
+	
+	game_name = new_game
 	player_id = 1
+	games_ref.update("%s" % game_name, { 
+		"p%d_checkin" % player_id : OS.get_unix_time(),
+		"turn": 1
+	})
+	games_ref = Firebase.Database.get_database_reference("games/%s" % game_name)
+	return true
 
 func join_match(name: String):
 	game_name = name
@@ -38,8 +48,8 @@ func _on_patch_update(data):
 	print(data)
 
 func check_in():
-	games_ref.update("%s" % game_name, { "p%d_checkin" % player_id : OS.get_unix_time() })
+	games_ref.update("/", { "p%d_checkin" % player_id : OS.get_unix_time() })
 	pass
 
 func set_board():
-	games_ref.update("%s" % game_name, { "p%d_board" % player_id : GameState.grid })
+	games_ref.update("/", { "p%d_board" % player_id : GameState.grid })

@@ -38,7 +38,6 @@ func _on_patch_update(data):
 	print(data)
 
 func check_in():
-	games_ref.update("%s" % game_name, { "p%d_board" % player_id : GameState.grid[0][0] })
 	games_ref.update("%s" % game_name, { "p%d_checkin" % player_id : OS.get_unix_time() })
 	pass
 

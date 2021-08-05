@@ -30,7 +30,7 @@ position = Vector2( 279.15, 196.746 )
 position = Vector2( 287.15, 216.746 )
 
 [node name="Checkin" type="Timer" parent="."]
-wait_time = 10.0
+wait_time = 5.0
 autostart = true
 
 [connection signal="timeout" from="Checkin" to="." method="_on_Checkin_timeout"]

@@ -1,0 +1,53 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://scenes/lobby/LobbyScene.gd" type="Script" id=1]
+
+[node name="Lobby" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="LobbyDialog" type="PopupDialog" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -90.0
+margin_top = -70.0
+margin_right = 90.0
+margin_bottom = 70.0
+rect_min_size = Vector2( 180, 140 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBox" type="VBoxContainer" parent="LobbyDialog"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_constants/separation = 12
+alignment = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Create" type="Button" parent="LobbyDialog/VBox"]
+margin_left = 30.0
+margin_top = 44.0
+margin_right = 150.0
+margin_bottom = 64.0
+rect_min_size = Vector2( 120, 0 )
+size_flags_horizontal = 4
+text = "Create Match"
+
+[node name="Join" type="Button" parent="LobbyDialog/VBox"]
+margin_left = 30.0
+margin_top = 76.0
+margin_right = 150.0
+margin_bottom = 96.0
+rect_min_size = Vector2( 120, 0 )
+size_flags_horizontal = 4
+size_flags_vertical = 4
+text = "Join Match"

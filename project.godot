@@ -182,6 +182,7 @@ Events="*res://scripts/Events.gd"
 GameState="*res://scripts/GameState.gd"
 Sounds="*res://scripts/Sounds.gd"
 Helpers="*res://scripts/Helpers.gd"
+Session="*res://scripts/Session.gd"
 
 [display]
 
@@ -195,6 +196,21 @@ window/stretch/aspect="keep"
 [editor_plugins]
 
 enabled=PoolStringArray( "res://addons/godot-firebase/plugin.cfg", "res://addons/http-sse-client/plugin.cfg", "res://addons/silicon.util.custom_docs/plugin.cfg" )
+
+[firebase]
+
+environment_variables/apiKey="AIzaSyCXWauu44RTt9TswL40WTkmgDhNgaakkmI"
+environment_variables/authDomain="godot-battleship.firebaseapp.com"
+environment_variables/databaseURL="https://godot-battleship-default-rtdb.firebaseio.com"
+environment_variables/projectId="godot-battleship"
+environment_variables/storageBucket="godot-battleship.appspot.com"
+environment_variables/messagingSenderId="884699540076"
+environment_variables/appId="1:884699540076:web:b4a6c33d97c263f312c649"
+environment_variables/measurementId="G-W6E18KK6CJ"
+environment_variables/clientId="884699540076-qd7s2m9krqn82pllgj1uftk26djo2lqg.apps.googleusercontent.com"
+environment_variables/clientSecret="qwlibFsoNF9xopjtFWEBZ7kr"
+environment_variables/domainUriPrefix=""
+environment_variables/cacheLocation="user://.firebase_cache"
 
 [importer_defaults]
 

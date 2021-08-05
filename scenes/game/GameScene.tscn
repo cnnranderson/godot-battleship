@@ -28,3 +28,9 @@ position = Vector2( 279.15, 196.746 )
 
 [node name="Carrier" parent="." instance=ExtResource( 2 )]
 position = Vector2( 287.15, 216.746 )
+
+[node name="Checkin" type="Timer" parent="."]
+wait_time = 10.0
+autostart = true
+
+[connection signal="timeout" from="Checkin" to="." method="_on_Checkin_timeout"]

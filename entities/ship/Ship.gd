@@ -47,7 +47,7 @@ func place(grid: ShipGrid, location: Vector2, grid_pos: Vector2):
 				
 	diff = _adjust_position(diff)
 	target_pos += diff
-	Events.emit_signal("ship_placed")
+	Events.emit_signal("ship_placed", self)
 	GameState.selected_ship = null
 
 func _adjust_position(target: Vector2):
@@ -64,7 +64,7 @@ func _adjust_orientation():
 
 func _on_Area2D_input_event(_viewport, event, _shape_idx):
 	if event is InputEventMouseButton:
-		if event.button_index == BUTTON_LEFT and event.pressed:
+		if event.button_index == BUTTON_LEFT and event.pressed and not GameState.ships_locked:
 			# Ignore input if a different ship is already being dragged around
 			if GameState.selected_ship != self and GameState.selected_ship != null:
 				return

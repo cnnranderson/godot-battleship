@@ -1,6 +1,8 @@
 extends Node2D
 class_name ShipGrid
 
+const HitMarker = preload("res://entities/hitmarker/HitMarker.tscn")
+
 export var grid_size = 10
 export var tile_size = 16
 
@@ -79,6 +81,12 @@ func place_ship(ship):
 	var normal = _grid_normalize(pos)
 	GameState.selected_ship.place(self, loc, normal)
 	return true
+
+func place_hit_marker(pos):
+	pass
+
+func place_attack_marker(pos):
+	pass
 
 func _on_mouse_over(over):
 	hovering = over

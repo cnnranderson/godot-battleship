@@ -6,6 +6,7 @@ onready var tween = $Tween
 
 func _ready():
 	$MatchList.rect_position.y = 400
+	Events.connect("new_matches", self, "_on_new_matches")
 
 func _valid_game_name():
 	return not name_field.text.strip_edges().empty()
@@ -26,12 +27,10 @@ func _on_Create_pressed():
 		print("Invalid match name")
 
 func _on_Join_pressed():
-	match_list.clear()
-	for match_name in Session.get_matches():
-		match_list.add_item(match_name)
-	
-	tween.interpolate_property($MatchList, "rect_position:y", 400, 70, 0.5, Tween.TRANS_CUBIC, Tween.EASE_OUT)
-	tween.start()
+	#tween.interpolate_property($MatchList, "rect_position:y", 400, 70, 0.5, Tween.TRANS_CUBIC, Tween.EASE_OUT)
+	#tween.start()
+	GameState.is_local = true
+	Global.main.load_scene(Global.Scenes.GAME)
 
 func _on_JoinMatch_pressed():
 	if match_list.is_anything_selected():
@@ -44,6 +43,11 @@ func _on_Back_pressed():
 	tween.start()
 
 func _on_Refresh_pressed():
+	match_list.clear()
+	for match_name in Session.get_matches():
+		match_list.add_item(match_name)
+
+func _on_new_matches():
 	match_list.clear()
 	for match_name in Session.get_matches():
 		match_list.add_item(match_name)

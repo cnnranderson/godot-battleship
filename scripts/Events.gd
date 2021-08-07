@@ -8,8 +8,14 @@ without having to create complex hierarchies within nodes when
 connecting signal subscribers.
 """
 
-signal game_won
+# Lobby signals
+signal new_matches
 
-# Ship Operations
+# Game State signals
+signal game_won
+signal ships_locked
+signal enemy_ships_locked
+
+# Ship signals
 signal ship_picked_up(ship)
-signal ship_placed
+signal ship_placed(ship)

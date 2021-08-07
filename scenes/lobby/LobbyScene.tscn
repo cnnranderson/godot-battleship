@@ -1,19 +1,18 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://scenes/lobby/LobbyScene.gd" type="Script" id=1]
 [ext_resource path="res://base_theme.tres" type="Theme" id=2]
-[ext_resource path="res://assets/images/refresh.png" type="Texture" id=3]
 
-[sub_resource type="StyleBoxFlat" id=6]
+[sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 0.34902, 0.247059, 0.188235, 1 )
 anti_aliasing = false
 
-[sub_resource type="StyleBoxEmpty" id=8]
+[sub_resource type="StyleBoxEmpty" id=2]
 
-[sub_resource type="StyleBoxFlat" id=9]
+[sub_resource type="StyleBoxFlat" id=3]
 bg_color = Color( 0.34902, 0.247059, 0.188235, 1 )
 
-[sub_resource type="StyleBoxFlat" id=1]
+[sub_resource type="StyleBoxFlat" id=4]
 bg_color = Color( 0.937255, 0.937255, 0.913725, 1 )
 
 [node name="Lobby" type="Control"]
@@ -61,6 +60,7 @@ rect_min_size = Vector2( 120, 0 )
 size_flags_horizontal = 4
 align = 1
 max_length = 12
+placeholder_text = "Enter lobby name..."
 
 [node name="Create" type="Button" parent="NewGamePanel/VBox"]
 margin_left = 16.0
@@ -87,9 +87,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 margin_left = -90.0
-margin_top = -110.0
+margin_top = 220.0
 margin_right = 90.0
-margin_bottom = 110.0
+margin_bottom = 440.0
 rect_min_size = Vector2( 180, 220 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -102,27 +102,25 @@ margin_right = 176.0
 margin_bottom = 216.0
 
 [node name="MBox" type="MarginContainer" parent="MatchList/VBox"]
-margin_left = 10.0
-margin_top = 10.0
-margin_right = 160.0
-margin_bottom = 180.0
+margin_right = 172.0
+margin_bottom = 187.0
 size_flags_vertical = 3
 
 [node name="List" type="ItemList" parent="MatchList/VBox/MBox"]
-margin_right = 150.0
-margin_bottom = 170.0
-custom_styles/selected_focus = SubResource( 6 )
-custom_styles/bg_focus = SubResource( 8 )
-custom_styles/selected = SubResource( 9 )
-custom_styles/bg = SubResource( 1 )
+margin_right = 172.0
+margin_bottom = 187.0
+custom_styles/selected_focus = SubResource( 1 )
+custom_styles/bg_focus = SubResource( 2 )
+custom_styles/selected = SubResource( 3 )
+custom_styles/bg = SubResource( 4 )
 custom_colors/guide_color = Color( 0.937255, 0.937255, 0.913725, 1 )
 custom_colors/font_color_selected = Color( 0.937255, 0.937255, 0.913725, 1 )
 custom_colors/font_color = Color( 0.34902, 0.247059, 0.188235, 1 )
 
 [node name="HBox" type="HBoxContainer" parent="MatchList/VBox"]
-margin_left = 11.0
+margin_left = 24.0
 margin_top = 191.0
-margin_right = 161.0
+margin_right = 148.0
 margin_bottom = 212.0
 size_flags_horizontal = 4
 
@@ -132,17 +130,9 @@ margin_bottom = 21.0
 rect_min_size = Vector2( 60, 0 )
 text = "Back"
 
-[node name="Refresh" type="Button" parent="MatchList/VBox/HBox"]
-margin_left = 64.0
-margin_right = 86.0
-margin_bottom = 21.0
-rect_min_size = Vector2( 22, 0 )
-icon = ExtResource( 3 )
-expand_icon = true
-
 [node name="JoinMatch" type="Button" parent="MatchList/VBox/HBox"]
-margin_left = 90.0
-margin_right = 150.0
+margin_left = 64.0
+margin_right = 124.0
 margin_bottom = 21.0
 rect_min_size = Vector2( 60, 0 )
 text = "Join"
@@ -150,5 +140,4 @@ text = "Join"
 [connection signal="pressed" from="NewGamePanel/VBox/Create" to="." method="_on_Create_pressed"]
 [connection signal="pressed" from="NewGamePanel/VBox/Join" to="." method="_on_Join_pressed"]
 [connection signal="pressed" from="MatchList/VBox/HBox/Back" to="." method="_on_Back_pressed"]
-[connection signal="pressed" from="MatchList/VBox/HBox/Refresh" to="." method="_on_Refresh_pressed"]
 [connection signal="pressed" from="MatchList/VBox/HBox/JoinMatch" to="." method="_on_JoinMatch_pressed"]

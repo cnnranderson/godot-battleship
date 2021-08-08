@@ -1,8 +1,7 @@
 extends Node
 
-
 var ships_locked = false
-var turn_state = 0
+var turn_state = 0 setget set_turn_state
 var selected_ship : Ship
 var is_local = false
 
@@ -21,3 +20,8 @@ var enemy_grid : Array = [
 	[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 	[0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 ]
+
+func set_turn_state(value: int):
+	turn_state = value
+	Events.emit_signal("turn_state_changed", turn_state)
+	print("wuh", turn_state)

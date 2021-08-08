@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://scenes/game/GameScene.gd" type="Script" id=1]
 [ext_resource path="res://entities/ship/Carrier.tscn" type="PackedScene" id=2]
@@ -8,6 +8,13 @@
 [ext_resource path="res://entities/ship/Boat.tscn" type="PackedScene" id=6]
 [ext_resource path="res://base_theme.tres" type="Theme" id=7]
 
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0.937255, 0.937255, 0.913725, 1 )
+border_width_top = 2
+border_width_bottom = 2
+border_color = Color( 0.34902, 0.247059, 0.188235, 1 )
+anti_aliasing = false
+
 [node name="GameScene" type="Node2D"]
 script = ExtResource( 1 )
 
@@ -16,6 +23,8 @@ anchor_mode = 0
 current = true
 smoothing_enabled = true
 smoothing_speed = 8.0
+
+[node name="Tween" type="Tween" parent="."]
 
 [node name="Player" type="Node2D" parent="."]
 
@@ -41,16 +50,18 @@ __meta__ = {
 [node name="Grid" parent="Player" instance=ExtResource( 3 )]
 position = Vector2( 140, 180 )
 
-[node name="Submarine" parent="Player" instance=ExtResource( 4 )]
+[node name="Ships" type="Node2D" parent="Player"]
+
+[node name="Submarine" parent="Player/Ships" instance=ExtResource( 4 )]
 position = Vector2( 271.15, 176.746 )
 
-[node name="Boat" parent="Player" instance=ExtResource( 6 )]
+[node name="Boat" parent="Player/Ships" instance=ExtResource( 6 )]
 position = Vector2( 263.15, 156.746 )
 
-[node name="Battleship" parent="Player" instance=ExtResource( 5 )]
+[node name="Battleship" parent="Player/Ships" instance=ExtResource( 5 )]
 position = Vector2( 279.15, 196.746 )
 
-[node name="Carrier" parent="Player" instance=ExtResource( 2 )]
+[node name="Carrier" parent="Player/Ships" instance=ExtResource( 2 )]
 position = Vector2( 287.15, 216.746 )
 
 [node name="Attack" type="Node2D" parent="."]
@@ -66,6 +77,64 @@ __meta__ = {
 }
 
 [node name="GameUI" type="CanvasLayer" parent="."]
+
+[node name="HUD" type="MarginContainer" parent="GameUI"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 350.0
+margin_bottom = 350.0
+mouse_filter = 2
+theme = ExtResource( 7 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="StateLabel" type="Label" parent="GameUI/HUD"]
+margin_right = 340.0
+margin_bottom = 13.0
+size_flags_vertical = 0
+custom_colors/font_color = Color( 0.34902, 0.247059, 0.188235, 1 )
+text = "Place your ships!"
+
+[node name="StateTransition" type="Control" parent="GameUI"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -360.0
+margin_right = -360.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Fade" type="ColorRect" parent="GameUI/StateTransition"]
+margin_right = 360.0
+margin_bottom = 360.0
+rect_min_size = Vector2( 360, 360 )
+color = Color( 0.278431, 0.278431, 0.278431, 0.54902 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TransitionPanel" type="PanelContainer" parent="GameUI/StateTransition"]
+margin_top = 160.0
+margin_right = 360.0
+margin_bottom = 200.0
+custom_styles/panel = SubResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TransitionLabel" type="Label" parent="GameUI/StateTransition"]
+margin_top = 170.0
+margin_right = 360.0
+margin_bottom = 190.0
+theme = ExtResource( 7 )
+custom_colors/font_color = Color( 0.34902, 0.247059, 0.188235, 1 )
+text = "Get Ready!"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Timers" type="CanvasLayer" parent="."]
 

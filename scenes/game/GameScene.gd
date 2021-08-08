@@ -11,10 +11,10 @@ func _ready():
 	#Session.check_in()
 
 func _process(delta):
-	if Input.is_action_just_pressed("ui_down"):
-		GameState.turn_state = randi() % 5
-	if GameState.turn_state == 0:
-			#review_player_grid()
+	# Allow player to review game boards if it's their turn to attack
+	if GameState.turn_state == 2:
+		if Input.is_action_just_pressed("ui_down"):
+			review_player_grid()
 		if Input.is_action_just_pressed("ui_up"):
 			review_attack_grid()
 
@@ -41,23 +41,34 @@ func _on_LockGrid_pressed():
 
 func _on_turn_state_changed(state):
 	var state_text = ""
+	var transition_text = ""
 	match state:
-		0: state_text = "Place your ships!"
-		1: state_text = "Get ready!"
-		2: state_text = "Your turn to Attack!"
-		3: state_text = "Opponents turn - Watch out!"
-		4: state_text = "Your turn to Attack!"
-	$GameUI/StateTransition/TransitionLabel.text = state_text
+		0: 
+			state_text = "Place your ships!"
+			transition_text = state_text
+			review_player_grid()
+		1: 
+			state_text = "Waiting for opponent to finish..."
+			transition_text = "Get ready!"
+		2: 
+			state_text = "Your turn to Attack!"
+			transition_text = "Make your move!"
+			review_attack_grid()
+		3: 
+			state_text = "Opponent's turn - Watch out!"
+			transition_text = "Waiting for opponent to attack..."
+			review_player_grid()
+	$GameUI/StateTransition/TransitionLabel.text = transition_text
 	
 	# Tween Transition screen effects
 	$GameUI/StateTransition.modulate.a = 1.0
 	$Tween.interpolate_property($GameUI/StateTransition, "rect_position:x", -500, 0, 0.3, Tween.TRANS_CUBIC, Tween.EASE_OUT)
-	$Tween.interpolate_property($GameUI/StateTransition, "modulate:a", 1, 0, 0.5, Tween.TRANS_CUBIC, Tween.EASE_IN, 2.0)
-	$Tween.interpolate_property($GameUI/StateTransition, "rect_position:x", -500, -500, 0.1, Tween.TRANS_CUBIC, Tween.EASE_OUT, 2.5)
+	$Tween.interpolate_property($GameUI/StateTransition, "modulate:a", 1, 0, 0.25, Tween.TRANS_CUBIC, Tween.EASE_IN, 2)
+	$Tween.interpolate_callback($GameUI/StateTransition, 2.3, "_set_position", Vector2(-500, 0))
 	
 	# Tween HUD state label
-	$Tween.interpolate_property($GameUI/HUD/StateLabel, "modulate:a", 1, 0, 0.25, Tween.TRANS_CUBIC, Tween.EASE_IN)
-	$Tween.interpolate_callback($GameUI/HUD/StateLabel, 1, "set_text", state_text)
-	$Tween.interpolate_property($GameUI/HUD/StateLabel, "modulate:a", 0, 1, 0.5, Tween.TRANS_CUBIC, Tween.EASE_IN, 2)
+	$Tween.interpolate_property($GameUI/HUD/StatePanel, "rect_position:y", 0, -20, 0.3, Tween.TRANS_CUBIC, Tween.EASE_OUT)
+	$Tween.interpolate_callback($GameUI/HUD/StatePanel/StateLabel, 1, "set_text", state_text)
+	$Tween.interpolate_property($GameUI/HUD/StatePanel, "rect_position:y", -20, 0, 0.3, Tween.TRANS_CUBIC, Tween.EASE_OUT, 2)
 	
 	$Tween.start()

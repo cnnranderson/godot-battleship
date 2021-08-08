@@ -2,9 +2,11 @@ extends Node2D
 class_name ShipGrid
 
 const HitMarker = preload("res://entities/hitmarker/HitMarker.tscn")
+enum GridType { PLAYER, ATTACK }
 
 export var grid_size = 10
 export var tile_size = 16
+export(GridType) var grid_type = GridType.PLAYER
 
 onready var area_shape = $Area2D/Shape
 
@@ -34,7 +36,8 @@ func _scale(value):
 	return value * tile_size
 
 func _process(_delta):
-	#update()
+	if grid_type == GridType.ATTACK:
+		pass
 	pass
 
 func _draw():

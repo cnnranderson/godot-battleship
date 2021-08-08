@@ -2,6 +2,7 @@ extends Node
 
 var ships_locked = false
 var turn_state = 0 setget set_turn_state
+var opponent_ready = true
 var selected_ship : Ship
 var is_local = false
 

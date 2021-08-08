@@ -2,7 +2,7 @@ extends Node
 
 var db_ref
 var db_path = "games"
-var game_name = "test"
+var game_name = "default"
 var player_id = 1
 var in_game = false
 

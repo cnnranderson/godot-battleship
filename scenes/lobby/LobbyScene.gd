@@ -29,7 +29,7 @@ func _on_Create_pressed():
 func _on_Join_pressed():
 	#tween.interpolate_property($MatchList, "rect_position:y", 400, 70, 0.5, Tween.TRANS_CUBIC, Tween.EASE_OUT)
 	#tween.start()
-	GameState.is_local = true
+	GameState.is_local_game = true
 	Global.main.load_scene(Global.Scenes.GAME)
 
 func _on_JoinMatch_pressed():

@@ -11,7 +11,9 @@ export(GridType) var grid_type = GridType.PLAYER
 onready var area_shape = $Area2D/Shape
 
 var pos = Vector2(0, 0)
+var attack_pos = Vector2(0, 0)
 var hovering = false
+var selected = false
 
 func _ready():
 	set_meta("entity_type", "grid")
@@ -36,24 +38,8 @@ func _scale(value):
 	return value * tile_size
 
 func _process(_delta):
-	if grid_type == GridType.ATTACK:
-		pass
-	pass
-
-func _draw():
-	#for i in range(0, 16):
-	#	for j in range(0, 16):
-	#		if GameState.grid[i][j] != 0:
-	#			draw_rect(Rect2(_scale(i - 8), _scale(j - 8), tile_size.x, tile_size.y), Color(20 * GameState.grid[i][j]))
-	#			
-	#if hovering and GameState.selected_ship:
-	#	var co = Color.black if GameState.grid[pos.x - 8][pos.y - 8] == 0 else Color.red
-	#	var ship_hp = GameState.selected_ship.hp
-	#	if GameState.selected_ship.orientation == 1:
-	#		draw_rect(Rect2(_scale(max(-8, min(pos.x - ship_hp / 2, 8 - ship_hp))), _scale(pos.y), _scale(ship_hp), tile_size.y), co)
-	#	else:
-	#		draw_rect(Rect2(_scale(pos.x), _scale(max(-8, min(pos.y - ship_hp / 2, 8 - ship_hp))), tile_size.x, _scale(ship_hp)), co)
-	pass
+	if grid_type == GridType.ATTACK and hovering and not selected and GameState.turn_state == 2:
+		$Selection.position = lerp($Selection.position, pos * tile_size, 0.2)
 
 func place_ship(ship):
 	var min_x = pos.x
@@ -91,8 +77,15 @@ func place_hit_marker(pos):
 func place_attack_marker(pos):
 	pass
 
+func select_attack():
+	selected = true
+	attack_pos = pos
+	print(attack_pos)
+
 func _on_mouse_over(over):
 	hovering = over
+	if grid_type == GridType.ATTACK and GameState.turn_state == 2:
+		$Selection.visible = hovering if not selected else true
 
 func _on_ship_picked_up(ship):
 	for i in range(0, grid_size):
@@ -102,4 +95,8 @@ func _on_ship_picked_up(ship):
 
 func _on_Area2D_input_event(_viewport, event, _shape_idx):
 	if event is InputEventMouse:
-		pos = ((event.position - position) / tile_size).floor()
+		pos = ((get_global_mouse_position() - position) / tile_size).floor()
+	
+	if event is InputEventMouseButton and grid_type == GridType.ATTACK:
+		if event.button_index == BUTTON_LEFT and event.pressed and not selected:
+			select_attack()

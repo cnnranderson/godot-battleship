@@ -53,21 +53,23 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Grid" parent="Player" instance=ExtResource( 3 )]
+[node name="Board" type="Node2D" parent="Player"]
+
+[node name="Grid" parent="Player/Board" instance=ExtResource( 3 )]
 position = Vector2( 140, 180 )
 
-[node name="Ships" type="Node2D" parent="Player"]
+[node name="Ships" type="Node2D" parent="Player/Board"]
 
-[node name="Submarine" parent="Player/Ships" instance=ExtResource( 4 )]
+[node name="Submarine" parent="Player/Board/Ships" instance=ExtResource( 4 )]
 position = Vector2( 271.15, 176.746 )
 
-[node name="Boat" parent="Player/Ships" instance=ExtResource( 6 )]
+[node name="Boat" parent="Player/Board/Ships" instance=ExtResource( 6 )]
 position = Vector2( 263.15, 156.746 )
 
-[node name="Battleship" parent="Player/Ships" instance=ExtResource( 5 )]
+[node name="Battleship" parent="Player/Board/Ships" instance=ExtResource( 5 )]
 position = Vector2( 279.15, 196.746 )
 
-[node name="Carrier" parent="Player/Ships" instance=ExtResource( 2 )]
+[node name="Carrier" parent="Player/Board/Ships" instance=ExtResource( 2 )]
 position = Vector2( 287.15, 216.746 )
 
 [node name="Attack" type="Node2D" parent="."]
@@ -77,8 +79,20 @@ position = Vector2( 180, -180 )
 grid_type = 1
 
 [node name="AttackUI" type="Control" parent="Attack"]
-margin_right = 40.0
-margin_bottom = 40.0
+margin_top = -360.0
+margin_right = 360.0
+mouse_filter = 2
+theme = ExtResource( 7 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="FireButton" type="Button" parent="Attack/AttackUI"]
+margin_left = 160.0
+margin_top = 290.0
+margin_right = 200.0
+margin_bottom = 312.0
+text = "FIRE!"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -161,4 +175,5 @@ autostart = true
 [node name="StateTimer" type="Timer" parent="Timers"]
 
 [connection signal="pressed" from="Player/PlayerUI/LockGrid" to="." method="_on_LockGrid_pressed"]
+[connection signal="pressed" from="Attack/AttackUI/FireButton" to="." method="_on_FireButton_pressed"]
 [connection signal="timeout" from="Timers/Checkin" to="." method="_on_Checkin_timeout"]

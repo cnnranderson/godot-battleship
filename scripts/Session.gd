@@ -76,7 +76,7 @@ func _on_patch_update(data):
 	print(data)
 
 func check_in():
-	if GameState.is_local: return
+	if GameState.is_local_game: return
 	db_ref.update("/", { "p%d_checkin" % player_id : OS.get_unix_time() })
 
 func set_board():

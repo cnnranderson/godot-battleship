@@ -46,7 +46,11 @@ func attempt_attack(grid_obj : ShipGrid, target, is_opponent_attack):
 		print("Hit")
 		grid_obj.place_hit_marker(grid_obj.attack_pos, true)
 		grid[target.y][target.x] = -grid[target.y][target.x]
-		GameState.turn_state = 4
+		if grid_obj.check_grid_lost(grid):
+			print("LOSE")
+			GameState.turn_state = 6
+		else:
+			GameState.turn_state = 4
 	else:
 		print("Miss")
 		grid_obj.place_hit_marker(grid_obj.attack_pos, false)
@@ -64,7 +68,7 @@ func _on_LockGrid_pressed():
 	# Short Circuit if all ships not placed
 	var ships = $Player/Board/Ships
 	for ship in ships.get_children():
-		if ship is Ship and not ship.placed:
+		if ship is Ship and not ship.placed and ship.visible:
 			return
 	
 	print(GameState.grid)
@@ -106,6 +110,10 @@ func _on_turn_state_changed(prev_state, state):
 			transition_text = "ATTACK MISSED" if prev_state == 2 else "THE OPPONENT MISSED!!"
 			next_state = 3 if prev_state == 2 else 2
 			$Timers/StateTimer.start()
+		6:
+			state_text = "..."
+			transition_text = "You LOST" if prev_state == 3 else "You WON!!"
+			$GameUI/StateTransition/MainMenu.visible = true
 	
 	$GameUI/StateTransition/TransitionLabel.text = transition_text
 	
@@ -114,7 +122,7 @@ func _on_turn_state_changed(prev_state, state):
 	$Tween.interpolate_property($GameUI/StateTransition, "rect_position:x", -500, 0, 0.3, Tween.TRANS_CUBIC, Tween.EASE_OUT)
 	
 	# Make sure to only display state progress when the match has begun (i.e. 2nd player is available)
-	if state != -1:
+	if state != -1 and state != 6:
 		$Tween.interpolate_property($GameUI/StateTransition, "modulate:a", 1, 0, 0.25, Tween.TRANS_CUBIC, Tween.EASE_IN, 2)
 		$Tween.interpolate_callback($GameUI/StateTransition, 2.3, "_set_position", Vector2(-500, 0))
 	
@@ -147,3 +155,7 @@ func _on_enemy_attacked(pos):
 	$Player/Board/Grid.attack_pos = pos - Vector2.ONE * 5
 	var target = pos
 	attempt_attack($Player/Board/Grid, target, true)
+
+func _on_MainMenu_pressed():
+	GameState.reset()
+	Global.main.load_scene(Global.Scenes.LOBBY)

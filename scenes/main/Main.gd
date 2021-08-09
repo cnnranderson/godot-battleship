@@ -7,8 +7,7 @@ var skip_transition = [false, false]
 
 func _ready():
 	Global.main = self
-	GameState.is_local_game = true
-	load_scene(Global.Scenes.GAME, true, true)
+	load_scene(Global.Scenes.START_MENU, true, true)
 
 func load_scene(scene = -1, skip_intro = false, skip_outro = false):
 	# Validate scene

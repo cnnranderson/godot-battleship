@@ -76,14 +76,16 @@ func place_hit_marker(pos, did_hit):
 	if did_hit:
 		GameState.hit_markers.append(pos)
 		var hit_mark = HitMarker.instance()
-		hit_mark.position = pos * tile_size
+		hit_mark.position = pos * tile_size + Vector2.ONE * 8
 		$HitMarkers.add_child(hit_mark)
+		hit_mark.get_node("AnimationPlayer").play("Rotate")
 	
 	if !did_hit:
 		GameState.hit_markers.append(pos)
 		var hit_mark = HitMarker.instance()
-		hit_mark.position = pos * tile_size
+		hit_mark.position = pos * tile_size + Vector2.ONE * 8
 		$HitMarkers.add_child(hit_mark)
+		hit_mark.get_node("AnimationPlayer").stop()
 	
 	# Reset hit marker
 	selected = false
@@ -94,6 +96,13 @@ func select_attack():
 	selected = true
 	attack_pos = pos
 	print("Targeting: ", attack_pos + Vector2.ONE * 5)
+
+func check_grid_lost(grid):
+	for i in range(0, grid_size):
+		for j in range(0, grid_size):
+			if grid[i][j] > 0:
+				return false
+	return true
 
 func _on_mouse_over(over):
 	hovering = over

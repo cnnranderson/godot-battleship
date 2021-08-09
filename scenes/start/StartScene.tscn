@@ -30,9 +30,9 @@ __meta__ = {
 }
 
 [node name="VBox" type="VBoxContainer" parent="Container"]
-margin_top = 105.0
+margin_top = 103.0
 margin_right = 320.0
-margin_bottom = 215.0
+margin_bottom = 217.0
 size_flags_horizontal = 5
 size_flags_vertical = 4
 custom_constants/separation = 12
@@ -46,18 +46,18 @@ text = "BATTLESHIP"
 align = 1
 
 [node name="PlayButton" type="Button" parent="Container/VBox"]
-margin_left = 132.0
+margin_left = 134.0
 margin_top = 60.0
-margin_right = 187.0
-margin_bottom = 79.0
+margin_right = 185.0
+margin_bottom = 81.0
 size_flags_horizontal = 4
 text = "Play Game"
 
 [node name="QuitButton" type="Button" parent="Container/VBox"]
-margin_left = 133.0
-margin_top = 91.0
-margin_right = 187.0
-margin_bottom = 110.0
+margin_left = 135.0
+margin_top = 93.0
+margin_right = 185.0
+margin_bottom = 114.0
 size_flags_horizontal = 4
 text = "Quit Game"
 

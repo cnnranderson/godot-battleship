@@ -8,13 +8,13 @@
 [ext_resource path="res://entities/ship/Boat.tscn" type="PackedScene" id=6]
 [ext_resource path="res://base_theme.tres" type="Theme" id=7]
 
-[sub_resource type="StyleBoxFlat" id=2]
+[sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 0.34902, 0.247059, 0.188235, 1 )
 border_width_bottom = 1
 border_color = Color( 0.34902, 0.247059, 0.188235, 1 )
 anti_aliasing = false
 
-[sub_resource type="StyleBoxFlat" id=1]
+[sub_resource type="StyleBoxFlat" id=2]
 bg_color = Color( 0.937255, 0.937255, 0.913725, 1 )
 border_width_top = 2
 border_width_bottom = 2
@@ -61,15 +61,18 @@ position = Vector2( 140, 180 )
 [node name="Ships" type="Node2D" parent="Player/Board"]
 
 [node name="Submarine" parent="Player/Board/Ships" instance=ExtResource( 4 )]
+visible = false
 position = Vector2( 271.15, 176.746 )
 
 [node name="Boat" parent="Player/Board/Ships" instance=ExtResource( 6 )]
 position = Vector2( 263.15, 156.746 )
 
 [node name="Battleship" parent="Player/Board/Ships" instance=ExtResource( 5 )]
+visible = false
 position = Vector2( 279.15, 196.746 )
 
 [node name="Carrier" parent="Player/Board/Ships" instance=ExtResource( 2 )]
+visible = false
 position = Vector2( 287.15, 216.746 )
 
 [node name="Attack" type="Node2D" parent="."]
@@ -125,7 +128,7 @@ theme = ExtResource( 7 )
 [node name="StatePanel" type="PanelContainer" parent="GameUI/HUD"]
 margin_right = 360.0
 margin_bottom = 20.0
-custom_styles/panel = SubResource( 2 )
+custom_styles/panel = SubResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -147,6 +150,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = -360.0
 margin_right = -360.0
+theme = ExtResource( 7 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -164,7 +168,7 @@ __meta__ = {
 margin_top = 160.0
 margin_right = 360.0
 margin_bottom = 200.0
-custom_styles/panel = SubResource( 1 )
+custom_styles/panel = SubResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -182,6 +186,14 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="MainMenu" type="Button" parent="GameUI/StateTransition"]
+visible = false
+margin_left = 120.0
+margin_top = 210.0
+margin_right = 240.0
+margin_bottom = 232.0
+text = "Return to Main Menu"
+
 [node name="Timers" type="CanvasLayer" parent="."]
 
 [node name="Checkin" type="Timer" parent="Timers"]
@@ -194,5 +206,6 @@ one_shot = true
 
 [connection signal="pressed" from="Player/PlayerUI/LockGrid" to="." method="_on_LockGrid_pressed"]
 [connection signal="pressed" from="Attack/AttackUI/FireButton" to="." method="_on_FireButton_pressed"]
+[connection signal="pressed" from="GameUI/StateTransition/MainMenu" to="." method="_on_MainMenu_pressed"]
 [connection signal="timeout" from="Timers/Checkin" to="." method="_on_Checkin_timeout"]
 [connection signal="timeout" from="Timers/StateTimer" to="." method="_on_StateTimer_timeout"]

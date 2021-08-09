@@ -86,7 +86,6 @@ func _find_guaranteed_hit(ship_type = -1):
 		for i in range(attack.y, 10 if dir == 1 else 0, dir):
 			for j in range(attack.x, 10 if dir == 1 else 0, dir):
 				attack = Vector2(j, i)
-				print(attack)
 				if GameState.grid[attack.y][attack.x] > 0 and (ship_type == -1 or ship_type == GameState.grid[attack.y][attack.x]):
 					return attack
 			attack.x = 0 if dir == 1 else 9

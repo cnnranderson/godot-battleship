@@ -62,22 +62,33 @@ func place_ship(ship):
 	else:
 		if GameState.selected_ship.orientation == 1:
 			for i in range(min_x + grid_size / 2, min_x + ship.hp + grid_size / 2):
-				GameState.grid[i][pos.y + grid_size / 2] = ship.hp
+				GameState.grid[pos.y + grid_size / 2][i] = ship.hp
 		else:
 			for i in range(min_y + grid_size / 2, min_y + ship.hp + grid_size / 2):
-				GameState.grid[pos.x + grid_size / 2][i] = ship.hp
+				GameState.grid[i][pos.x + grid_size / 2] = ship.hp
 	
 	var loc = _grid_to_world(pos)
 	var normal = _grid_normalize(pos)
 	GameState.selected_ship.place(self, loc, normal)
 	return true
 
-func place_hit_marker(did_hit):
+func place_hit_marker(pos, did_hit):
 	if did_hit:
-		GameState.hit_markers = attack_pos
+		GameState.hit_markers.append(pos)
 		var hit_mark = HitMarker.instance()
-		hit_mark.position = attack_pos * tile_size
+		hit_mark.position = pos * tile_size
 		$HitMarkers.add_child(hit_mark)
+	
+	if !did_hit:
+		GameState.hit_markers.append(pos)
+		var hit_mark = HitMarker.instance()
+		hit_mark.position = pos * tile_size
+		$HitMarkers.add_child(hit_mark)
+	
+	# Reset hit marker
+	selected = false
+	attack_pos = -Vector2.ONE
+	$Selection.visible = false
 
 func select_attack():
 	selected = true

@@ -15,7 +15,8 @@ signal new_matches
 signal game_won
 signal ships_locked
 signal enemy_ships_locked
-signal turn_state_changed(state)
+signal turn_state_changed(prev_state, state)
+signal enemy_attacked(pos)
 
 # Ship signals
 signal ship_picked_up(ship)

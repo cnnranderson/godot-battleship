@@ -15,13 +15,13 @@ var enemy_grid : Array = [
 	[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 	[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 	[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-	[0, 0, 0, 0, 2, 2, 0, 0, 0, 0],
+	[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 	[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 	[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 	[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 	[0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 ]
 
-func set_turn_state(value: int):
-	turn_state = value
-	Events.emit_signal("turn_state_changed", turn_state)
+func set_turn_state(new_value: int):
+	Events.emit_signal("turn_state_changed", turn_state, new_value)
+	turn_state = new_value

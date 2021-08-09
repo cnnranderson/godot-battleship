@@ -1,5 +1,7 @@
 extends Node2D
 
+const AI = preload("res://entities/ai/AI.tscn")
+
 onready var state_label : Label = $GameUI/HUD/StateLabel
 
 var ships_placed = []
@@ -9,8 +11,12 @@ func _ready():
 	Events.connect("ships_locked", self, "_on_ships_locked")
 	Events.connect("enemy_ships_locked", self, "_on_enemy_ships_locked")
 	Events.connect("turn_state_changed", self, "_on_turn_state_changed")
+	Events.connect("enemy_attacked", self, "_on_enemy_attacked")
+	
 	if GameState.is_local_game:
 		GameState.turn_state = 0
+		var opponent = AI.instance()
+		add_child(opponent)
 	else:
 		GameState.turn_state = -1
 	#Session.check_in()
@@ -33,13 +39,17 @@ func center_board():
 	$Tween.interpolate_property($Player/Board, "position:x", 0, 40, 0.3, Tween.TRANS_CUBIC, Tween.EASE_OUT)
 	$Tween.start()
 
-func attempt_attack(target):
-	print("Attempting attack: ", target)
-	if GameState.enemy_grid[target.y][target.x] != 0:
-		$Attack/Grid.place_hit_marker(true)
+func attempt_attack(grid_obj : ShipGrid, target, is_opponent_attack):
+	print("Attempting attack: ", target, " by %s" % ("Enemy" if is_opponent_attack else "Player"))
+	var grid = GameState.enemy_grid if not is_opponent_attack else GameState.grid
+	if grid[target.y][target.x] != 0 and (grid_obj.selected or is_opponent_attack):
+		print("Hit")
+		grid_obj.place_hit_marker(grid_obj.attack_pos, true)
+		grid[target.y][target.x] = 0
 		GameState.turn_state = 4
 	else:
 		print("Miss")
+		grid_obj.place_hit_marker(grid_obj.attack_pos, false)
 		GameState.turn_state = 5
 
 func show_overlay(transition_text, future_state):
@@ -57,12 +67,14 @@ func _on_LockGrid_pressed():
 		if ship is Ship and not ship.placed:
 			return
 	
+	print(GameState.grid)
+	print(GameState.enemy_grid)
 	center_board()
 	$Player/PlayerUI/LockGrid.visible = false
 	GameState.ships_locked = true
 	GameState.turn_state = 3 if Session.player_id == 2 else 2 if GameState.opponent_ready else 1
 
-func _on_turn_state_changed(state):
+func _on_turn_state_changed(prev_state, state):
 	var state_text = $GameUI/HUD/StatePanel/StateLabel.text
 	var transition_text = $GameUI/StateTransition/TransitionLabel.text
 	match state:
@@ -86,13 +98,13 @@ func _on_turn_state_changed(state):
 			review_player_grid()
 		4:
 			state_text = "..."
-			transition_text = "DIRECT HIT!"
-			next_state = 3
+			transition_text = "DIRECT HIT!" if prev_state == 2 else "YOU WERE HIT!"
+			next_state = 3 if prev_state == 2 else 2
 			$Timers/StateTimer.start()
 		5:
 			state_text = "..."
-			transition_text = "ATTACK MISSED"
-			next_state = 3
+			transition_text = "ATTACK MISSED" if prev_state == 2 else "THE OPPONENT MISSED!!"
+			next_state = 3 if prev_state == 2 else 2
 			$Timers/StateTimer.start()
 	
 	$GameUI/StateTransition/TransitionLabel.text = transition_text
@@ -102,7 +114,7 @@ func _on_turn_state_changed(state):
 	$Tween.interpolate_property($GameUI/StateTransition, "rect_position:x", -500, 0, 0.3, Tween.TRANS_CUBIC, Tween.EASE_OUT)
 	
 	# Make sure to only display state progress when the match has begun (i.e. 2nd player is available)
-	if GameState.turn_state != -1:
+	if state != -1:
 		$Tween.interpolate_property($GameUI/StateTransition, "modulate:a", 1, 0, 0.25, Tween.TRANS_CUBIC, Tween.EASE_IN, 2)
 		$Tween.interpolate_callback($GameUI/StateTransition, 2.3, "_set_position", Vector2(-500, 0))
 	
@@ -115,10 +127,10 @@ func _on_turn_state_changed(state):
 
 func _on_StateTimer_timeout():
 	GameState.turn_state = next_state
-	pass
 
 func _on_FireButton_pressed():
 	var target = $Attack/Grid.attack_pos + Vector2.ONE * 5
+	if GameState.turn_state != 2: return
 	
 	# Make sure there's a valid target
 	if target == -Vector2.ONE:
@@ -128,4 +140,9 @@ func _on_FireButton_pressed():
 		$Tween.interpolate_property($Attack/AttackUI/NoTargetLabel, "rect_position:y", 305, 315, 0.25, Tween.TRANS_CUBIC, Tween.EASE_IN, 1)
 		$Tween.start()
 	else:
-		attempt_attack(target)
+		attempt_attack($Attack/Grid, target, false)
+
+func _on_enemy_attacked(pos):
+	$Player/Board/Grid.attack_pos = pos
+	var target = pos + Vector2.ONE * 5
+	attempt_attack($Player/Board/Grid, target, true)

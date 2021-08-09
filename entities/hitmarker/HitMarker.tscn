@@ -3,5 +3,6 @@
 [ext_resource path="res://assets/images/hit.png" type="Texture" id=1]
 
 [node name="HitMarker" type="Sprite"]
+z_index = 1
 texture = ExtResource( 1 )
 centered = false

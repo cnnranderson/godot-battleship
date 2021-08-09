@@ -189,7 +189,7 @@ wait_time = 5.0
 autostart = true
 
 [node name="StateTimer" type="Timer" parent="Timers"]
-wait_time = 3.0
+wait_time = 4.0
 one_shot = true
 
 [connection signal="pressed" from="Player/PlayerUI/LockGrid" to="." method="_on_LockGrid_pressed"]

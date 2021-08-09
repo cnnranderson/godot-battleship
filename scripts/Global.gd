@@ -22,6 +22,7 @@ var debug = true
 
 func _ready():
 	pause_mode = Node.PAUSE_MODE_PROCESS
+	randomize()
 
 func _process(_delta):
 	if debug:

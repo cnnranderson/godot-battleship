@@ -81,6 +81,7 @@ grid_type = 1
 [node name="AttackUI" type="Control" parent="Attack"]
 margin_top = -360.0
 margin_right = 360.0
+rect_min_size = Vector2( 360, 360 )
 mouse_filter = 2
 theme = ExtResource( 7 )
 __meta__ = {
@@ -89,10 +90,25 @@ __meta__ = {
 
 [node name="FireButton" type="Button" parent="Attack/AttackUI"]
 margin_left = 160.0
-margin_top = 290.0
+margin_top = 280.0
 margin_right = 200.0
-margin_bottom = 312.0
+margin_bottom = 302.0
+rect_min_size = Vector2( 40, 22 )
 text = "FIRE!"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="NoTargetLabel" type="Label" parent="Attack/AttackUI"]
+modulate = Color( 1, 1, 1, 0 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 150.0
+margin_top = 310.0
+margin_right = -150.0
+margin_bottom = -37.0
+custom_colors/font_color = Color( 0.34902, 0.247059, 0.188235, 1 )
+text = "Invalid target!"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -173,7 +189,10 @@ wait_time = 5.0
 autostart = true
 
 [node name="StateTimer" type="Timer" parent="Timers"]
+wait_time = 3.0
+one_shot = true
 
 [connection signal="pressed" from="Player/PlayerUI/LockGrid" to="." method="_on_LockGrid_pressed"]
 [connection signal="pressed" from="Attack/AttackUI/FireButton" to="." method="_on_FireButton_pressed"]
 [connection signal="timeout" from="Timers/Checkin" to="." method="_on_Checkin_timeout"]
+[connection signal="timeout" from="Timers/StateTimer" to="." method="_on_StateTimer_timeout"]

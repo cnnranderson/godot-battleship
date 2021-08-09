@@ -3,6 +3,7 @@ extends Node2D
 onready var state_label : Label = $GameUI/HUD/StateLabel
 
 var ships_placed = []
+var next_state = 0
 
 func _ready():
 	Events.connect("ships_locked", self, "_on_ships_locked")
@@ -32,6 +33,19 @@ func center_board():
 	$Tween.interpolate_property($Player/Board, "position:x", 0, 40, 0.3, Tween.TRANS_CUBIC, Tween.EASE_OUT)
 	$Tween.start()
 
+func attempt_attack(target):
+	print("Attempting attack: ", target)
+	if GameState.enemy_grid[target.y][target.x] != 0:
+		$Attack/Grid.place_hit_marker(true)
+		GameState.turn_state = 4
+	else:
+		print("Miss")
+		GameState.turn_state = 5
+
+func show_overlay(transition_text, future_state):
+	$Timers/StateTimer.start()
+	next_state = future_state
+
 func _on_Checkin_timeout():
 	Session.check_in()
 	$Timers/Checkin.start()
@@ -43,14 +57,14 @@ func _on_LockGrid_pressed():
 		if ship is Ship and not ship.placed:
 			return
 	
-	$Player/PlayerUI/LockGrid.visible = false
 	center_board()
+	$Player/PlayerUI/LockGrid.visible = false
 	GameState.ships_locked = true
 	GameState.turn_state = 3 if Session.player_id == 2 else 2 if GameState.opponent_ready else 1
 
 func _on_turn_state_changed(state):
-	var state_text = ""
-	var transition_text = ""
+	var state_text = $GameUI/HUD/StatePanel/StateLabel.text
+	var transition_text = $GameUI/StateTransition/TransitionLabel.text
 	match state:
 		-1:
 			state_text = "Waiting for opponent..."
@@ -70,12 +84,24 @@ func _on_turn_state_changed(state):
 			state_text = "Waiting for opponent to attack..."
 			transition_text = "Opponent's turn - Watch out!"
 			review_player_grid()
+		4:
+			state_text = "..."
+			transition_text = "DIRECT HIT!"
+			next_state = 3
+			$Timers/StateTimer.start()
+		5:
+			state_text = "..."
+			transition_text = "ATTACK MISSED"
+			next_state = 3
+			$Timers/StateTimer.start()
+	
 	$GameUI/StateTransition/TransitionLabel.text = transition_text
 	
 	# Tween Transition screen effects
 	$GameUI/StateTransition.modulate.a = 1.0
 	$Tween.interpolate_property($GameUI/StateTransition, "rect_position:x", -500, 0, 0.3, Tween.TRANS_CUBIC, Tween.EASE_OUT)
 	
+	# Make sure to only display state progress when the match has begun (i.e. 2nd player is available)
 	if GameState.turn_state != -1:
 		$Tween.interpolate_property($GameUI/StateTransition, "modulate:a", 1, 0, 0.25, Tween.TRANS_CUBIC, Tween.EASE_IN, 2)
 		$Tween.interpolate_callback($GameUI/StateTransition, 2.3, "_set_position", Vector2(-500, 0))
@@ -87,6 +113,19 @@ func _on_turn_state_changed(state):
 	
 	$Tween.start()
 
-func _on_FireButton_pressed():
-	
+func _on_StateTimer_timeout():
+	GameState.turn_state = next_state
 	pass
+
+func _on_FireButton_pressed():
+	var target = $Attack/Grid.attack_pos + Vector2.ONE * 5
+	
+	# Make sure there's a valid target
+	if target == -Vector2.ONE:
+		$Tween.interpolate_property($Attack/AttackUI/NoTargetLabel, "modulate:a", 0, 1, 0.25, Tween.TRANS_CUBIC, Tween.EASE_OUT)
+		$Tween.interpolate_property($Attack/AttackUI/NoTargetLabel, "rect_position:y", 315, 305, 0.25, Tween.TRANS_CUBIC, Tween.EASE_OUT)
+		$Tween.interpolate_property($Attack/AttackUI/NoTargetLabel, "modulate:a", 1, 0, 0.25, Tween.TRANS_CUBIC, Tween.EASE_IN, 1)
+		$Tween.interpolate_property($Attack/AttackUI/NoTargetLabel, "rect_position:y", 305, 315, 0.25, Tween.TRANS_CUBIC, Tween.EASE_IN, 1)
+		$Tween.start()
+	else:
+		attempt_attack(target)

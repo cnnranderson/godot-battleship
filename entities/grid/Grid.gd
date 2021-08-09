@@ -11,7 +11,7 @@ export(GridType) var grid_type = GridType.PLAYER
 onready var area_shape = $Area2D/Shape
 
 var pos = Vector2(0, 0)
-var attack_pos = Vector2(0, 0)
+var attack_pos = -Vector2.ONE
 var hovering = false
 var selected = false
 
@@ -38,8 +38,9 @@ func _scale(value):
 	return value * tile_size
 
 func _process(_delta):
-	if grid_type == GridType.ATTACK and hovering and not selected and GameState.turn_state == 2:
-		$Selection.position = lerp($Selection.position, pos * tile_size, 0.2)
+	if grid_type == GridType.ATTACK and hovering and GameState.turn_state == 2:
+		var target = attack_pos if selected else pos
+		$Selection.position = lerp($Selection.position, target * tile_size, 0.2)
 
 func place_ship(ship):
 	var min_x = pos.x
@@ -71,16 +72,17 @@ func place_ship(ship):
 	GameState.selected_ship.place(self, loc, normal)
 	return true
 
-func place_hit_marker(pos):
-	pass
-
-func place_attack_marker(pos):
-	pass
+func place_hit_marker(did_hit):
+	if did_hit:
+		GameState.hit_markers = attack_pos
+		var hit_mark = HitMarker.instance()
+		hit_mark.position = attack_pos * tile_size
+		$HitMarkers.add_child(hit_mark)
 
 func select_attack():
 	selected = true
 	attack_pos = pos
-	print(attack_pos)
+	print("Targeting: ", attack_pos + Vector2.ONE * 5)
 
 func _on_mouse_over(over):
 	hovering = over
@@ -98,5 +100,5 @@ func _on_Area2D_input_event(_viewport, event, _shape_idx):
 		pos = ((get_global_mouse_position() - position) / tile_size).floor()
 	
 	if event is InputEventMouseButton and grid_type == GridType.ATTACK:
-		if event.button_index == BUTTON_LEFT and event.pressed and not selected:
+		if event.button_index == BUTTON_LEFT and event.pressed:
 			select_attack()

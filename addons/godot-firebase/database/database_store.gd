@@ -58,10 +58,19 @@ func _update_data(path: String, payload, patch: bool) -> void:
 	keys.remove(final_key_idx)
 		
 	for key in keys:
-		if !dict.has(key):
-			dict[key] = { }
+		if typeof(dict) == TYPE_DICTIONARY:
+			if !dict.has(key):
+				dict[key] = { }
 				
-		dict = dict[key]
+			dict = dict[key]
+			
+		elif typeof(dict) == TYPE_ARRAY:
+			if dict.size() < int(key):
+				for i in dict.size() - key:
+					dict.append([])
+			
+			dict = dict[int(key)]
+		
 		
 		#
 		# Handle non-patch (a.k.a. put) mode and then update the destination value.
@@ -79,7 +88,7 @@ func _update_data(path: String, payload, patch: bool) -> void:
 				
 		_update_dictionary(dict[final_key], payload)
 	else:
-		dict[final_key] = payload
+		dict[int(final_key)] = payload
 		
 	if debug:
 		print("...Data store updated (%s)." % _data)

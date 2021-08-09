@@ -27,6 +27,9 @@ func _on_Create_pressed():
 		print("Invalid match name")
 
 func _on_Join_pressed():
+	match_list.clear()
+	for match_name in Session.get_matches():
+		match_list.add_item(match_name)
 	tween.interpolate_property($MatchList, "rect_position:y", 400, 70, 0.5, Tween.TRANS_CUBIC, Tween.EASE_OUT)
 	tween.start()
 
@@ -39,11 +42,6 @@ func _on_JoinMatch_pressed():
 func _on_Back_pressed():
 	tween.interpolate_property($MatchList, "rect_position:y", 70, 400, 0.5, Tween.TRANS_CUBIC, Tween.EASE_IN)
 	tween.start()
-
-func _on_Refresh_pressed():
-	match_list.clear()
-	for match_name in Session.get_matches():
-		match_list.add_item(match_name)
 
 func _on_new_matches():
 	match_list.clear()

@@ -2,7 +2,7 @@ extends Node2D
 
 const AI = preload("res://entities/ai/AI.tscn")
 
-onready var state_label : Label = $GameUI/HUD/StateLabel
+onready var state_label : Label = $GameUI/HUD/StatePanel/StateLabel
 
 var ships_placed = []
 var next_state = 0
@@ -12,6 +12,8 @@ func _ready():
 	Events.connect("enemy_ships_locked", self, "_on_enemy_ships_locked")
 	Events.connect("turn_state_changed", self, "_on_turn_state_changed")
 	Events.connect("enemy_attacked", self, "_on_enemy_attacked")
+	Events.connect("player_joined", self, "_on_player_joined")
+	Events.connect("player_disconnected", self, "_on_player_disconnected")
 	
 	if GameState.is_local_game:
 		GameState.turn_state = 0
@@ -19,7 +21,7 @@ func _ready():
 		add_child(opponent)
 	else:
 		GameState.turn_state = -1
-	#Session.check_in()
+	Session.check_in()
 
 func _process(delta):
 	# Allow player to review game boards if it's their turn to attack
@@ -42,18 +44,18 @@ func center_board():
 func attempt_attack(grid_obj : ShipGrid, target, is_opponent_attack):
 	print("Attempting attack: ", target, " by %s" % ("Enemy" if is_opponent_attack else "Player"))
 	var grid = GameState.enemy_grid if not is_opponent_attack else GameState.grid
-	if grid[target.y][target.x] != 0 and (grid_obj.selected or is_opponent_attack):
+	if grid[target.y][target.x] > 0 and (grid_obj.selected or is_opponent_attack):
 		print("Hit")
 		grid_obj.place_hit_marker(grid_obj.attack_pos, true)
 		grid[target.y][target.x] = -grid[target.y][target.x]
 		if grid_obj.check_grid_lost(grid):
-			print("LOSE")
 			GameState.turn_state = 6
 		else:
 			GameState.turn_state = 4
 	else:
 		print("Miss")
 		grid_obj.place_hit_marker(grid_obj.attack_pos, false)
+		grid[target.y][target.x] = -1
 		GameState.turn_state = 5
 
 func show_overlay(transition_text, future_state):
@@ -71,12 +73,11 @@ func _on_LockGrid_pressed():
 		if ship is Ship and not ship.placed and ship.visible:
 			return
 	
-	print(GameState.grid)
-	print(GameState.enemy_grid)
 	center_board()
 	$Player/PlayerUI/LockGrid.visible = false
+	Session.set_board()
 	GameState.ships_locked = true
-	GameState.turn_state = 3 if Session.player_id == 2 else 2 if GameState.opponent_ready else 1
+	GameState.turn_state = 1 if not GameState.opponent_ready else (3 if Session.player_id == 2 else 2)
 
 func _on_turn_state_changed(prev_state, state):
 	var state_text = $GameUI/HUD/StatePanel/StateLabel.text
@@ -114,6 +115,10 @@ func _on_turn_state_changed(prev_state, state):
 			state_text = "..."
 			transition_text = "You LOST" if prev_state == 3 else "You WON!!"
 			$GameUI/StateTransition/MainMenu.visible = true
+		7:
+			state_text = "..."
+			transition_text = "A player has disconnected..."
+			$GameUI/StateTransition/MainMenu.visible = true
 	
 	$GameUI/StateTransition/TransitionLabel.text = transition_text
 	
@@ -122,7 +127,7 @@ func _on_turn_state_changed(prev_state, state):
 	$Tween.interpolate_property($GameUI/StateTransition, "rect_position:x", -500, 0, 0.3, Tween.TRANS_CUBIC, Tween.EASE_OUT)
 	
 	# Make sure to only display state progress when the match has begun (i.e. 2nd player is available)
-	if state != -1 and state != 6:
+	if state != -1 and state < 6:
 		$Tween.interpolate_property($GameUI/StateTransition, "modulate:a", 1, 0, 0.25, Tween.TRANS_CUBIC, Tween.EASE_IN, 2)
 		$Tween.interpolate_callback($GameUI/StateTransition, 2.3, "_set_position", Vector2(-500, 0))
 	
@@ -150,6 +155,7 @@ func _on_FireButton_pressed():
 	else:
 		GameState.hit_markers.append(target)
 		attempt_attack($Attack/Grid, target, false)
+		Session.attack(target)
 
 func _on_enemy_attacked(pos):
 	$Player/Board/Grid.attack_pos = pos - Vector2.ONE * 5
@@ -159,3 +165,15 @@ func _on_enemy_attacked(pos):
 func _on_MainMenu_pressed():
 	GameState.reset()
 	Global.main.load_scene(Global.Scenes.LOBBY)
+
+func _on_player_joined():
+	GameState.opponent_joined = true
+	GameState.turn_state = 0
+
+func _on_enemy_ships_locked():
+	GameState.opponent_ready = true
+	if GameState.turn_state == 1:
+		GameState.turn_state = 3 if Session.player_id == 2 else 2 if GameState.opponent_ready else 1
+
+func _on_player_disconnected():
+	GameState.turn_state = 7

@@ -11,6 +11,11 @@ connecting signal subscribers.
 # Lobby signals
 signal new_matches
 
+# Session signals
+signal player_joined
+signal player_attacked
+signal player_disconnected
+
 # Game State signals
 signal game_won
 signal ships_locked

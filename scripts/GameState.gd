@@ -2,7 +2,8 @@ extends Node
 
 var ships_locked = false
 var turn_state = -1 setget set_turn_state
-var opponent_ready = true
+var opponent_ready = false
+var opponent_joined = false
 var selected_ship : Ship
 var is_local_game = false
 
@@ -18,6 +19,7 @@ func reset():
 	ships_locked = false
 	turn_state = -1
 	opponent_ready = false
+	opponent_joined = false
 	is_local_game = false
 	grid.clear()
 	hit_markers.clear()

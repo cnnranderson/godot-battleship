@@ -197,7 +197,7 @@ text = "Return to Main Menu"
 [node name="Timers" type="CanvasLayer" parent="."]
 
 [node name="Checkin" type="Timer" parent="Timers"]
-wait_time = 5.0
+wait_time = 15.0
 autostart = true
 
 [node name="StateTimer" type="Timer" parent="Timers"]

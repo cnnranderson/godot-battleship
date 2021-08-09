@@ -45,7 +45,7 @@ func attempt_attack(grid_obj : ShipGrid, target, is_opponent_attack):
 	if grid[target.y][target.x] != 0 and (grid_obj.selected or is_opponent_attack):
 		print("Hit")
 		grid_obj.place_hit_marker(grid_obj.attack_pos, true)
-		grid[target.y][target.x] = 0
+		grid[target.y][target.x] = -grid[target.y][target.x]
 		GameState.turn_state = 4
 	else:
 		print("Miss")
@@ -133,16 +133,17 @@ func _on_FireButton_pressed():
 	if GameState.turn_state != 2: return
 	
 	# Make sure there's a valid target
-	if target == -Vector2.ONE:
+	if target == -Vector2.ONE or GameState.hit_markers.has(target) or not $Attack/Grid.selected:
 		$Tween.interpolate_property($Attack/AttackUI/NoTargetLabel, "modulate:a", 0, 1, 0.25, Tween.TRANS_CUBIC, Tween.EASE_OUT)
 		$Tween.interpolate_property($Attack/AttackUI/NoTargetLabel, "rect_position:y", 315, 305, 0.25, Tween.TRANS_CUBIC, Tween.EASE_OUT)
 		$Tween.interpolate_property($Attack/AttackUI/NoTargetLabel, "modulate:a", 1, 0, 0.25, Tween.TRANS_CUBIC, Tween.EASE_IN, 1)
 		$Tween.interpolate_property($Attack/AttackUI/NoTargetLabel, "rect_position:y", 305, 315, 0.25, Tween.TRANS_CUBIC, Tween.EASE_IN, 1)
 		$Tween.start()
 	else:
+		GameState.hit_markers.append(target)
 		attempt_attack($Attack/Grid, target, false)
 
 func _on_enemy_attacked(pos):
-	$Player/Board/Grid.attack_pos = pos
-	var target = pos + Vector2.ONE * 5
+	$Player/Board/Grid.attack_pos = pos - Vector2.ONE * 5
+	var target = pos
 	attempt_attack($Player/Board/Grid, target, true)

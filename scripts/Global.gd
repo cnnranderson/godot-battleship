@@ -1,5 +1,7 @@
 extends Node
 
+# Random, 20% Acc, 35% Acc, 60% Acc
+enum Difficulty { EASY, MEDIUM, HARD, IMPOSSIBLE }
 enum Scenes { START_MENU, GAME, LOBBY }
 enum Colors { BLUE, BROWN, RED, YELLOW, WHITE }
 

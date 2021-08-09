@@ -8,7 +8,6 @@ var is_local_game = false
 
 var grid : Array = []
 var hit_markers = []
-var attack_markers = []
 var enemy_grid : Array = [
 	[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 	[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],

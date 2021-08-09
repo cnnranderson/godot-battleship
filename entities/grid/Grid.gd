@@ -49,12 +49,12 @@ func place_ship(ship):
 	if GameState.selected_ship.orientation == 1:
 		min_x = max(-grid_size / 2, min(pos.x - ship.hp / 2, grid_size / 2 - ship.hp))
 		for i in range(min_x + grid_size / 2, min_x + ship.hp + grid_size / 2):
-			if GameState.grid[i][pos.y + grid_size / 2] != 0:
+			if GameState.grid[pos.y + grid_size / 2][i] != 0:
 				ship_overlap = true
 	else:
 		min_y = max(-8, min(pos.y - ship.hp / 2, grid_size / 2 - ship.hp))
 		for i in range(min_y + grid_size / 2, min_y + ship.hp + grid_size / 2):
-			if GameState.grid[pos.x + grid_size / 2][i] != 0:
+			if GameState.grid[i][pos.x + grid_size / 2] != 0:
 				ship_overlap = true
 	
 	if ship_overlap:
